@@ -1,22 +1,35 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using System.IO;
+using System.Reflection.Emit;
 
 var keepAlive = true;
 decimal intOne = 0;
 decimal intTwo = 0;
-string operand;
+string operand = "";
 ConsoleKeyInfo status;
 decimal result = 0;
 
 while (keepAlive)
 {
-    try
+    var divZero = false;
+    var operandT = true;
+    while (operandT)
     {
-        var divZero = false;
         Console.Write("Enter type of calculation +,-,*,/.");
         operand = (Console.ReadLine() ?? "");
+        if (operand == "+" || operand == "-" || operand == "*" || operand == "/")
+        {
+            operandT = false;
+        }
+        else
+        {
+            Console.WriteLine("That is not an operand!");
+        }
+    }
         Console.Write("Enter first integer:");
-        intOne = Convert.ToDecimal(Console.ReadLine() ?? "");
+    intOne = Convert.ToDecimal(Console.ReadLine() ?? "");
+    if (operand == "/")
+    {
         while (!divZero)
         {
             Console.Write("Enter second integer:");
@@ -31,7 +44,14 @@ while (keepAlive)
                 divZero = true;
             }
         }
-        Console.ForegroundColor = ConsoleColor.Green;
+    }
+    else
+    {
+        Console.Write("Enter second integer:");
+        intTwo = Convert.ToDecimal(Console.ReadLine() ?? "");
+    }
+
+    Console.ForegroundColor = ConsoleColor.Green;
         switch (operand)
         {
             case "+":
@@ -47,8 +67,6 @@ while (keepAlive)
                 result = Divide(intOne, intTwo);
                 break;
             default:
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("That is not an operand!");
                 break;
         }
         Console.ResetColor();
@@ -61,13 +79,6 @@ while (keepAlive)
             break;
         }
         Console.Clear();
-    }
-    catch
-    {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine("An error has occurred!");
-        Console.ResetColor();
-    }
 }
 
 static decimal Multiply( decimal param1, decimal param2)
